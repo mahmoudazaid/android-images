@@ -4,10 +4,7 @@ on:
   push:
     branches:
       - main  
-  # pull_request:
-  #   branches:
-  #     - main  # Trigger when a PR is opened against the main branch
-    workflow_dispatch:
+  workflow_dispatch:
     inputs:
       version:
         description: 'Version tag for the Docker image'
@@ -18,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: "mahmoudazaid" 
+      DOCKER_USERNAME: "mahmoudazaid"
 
     steps:
     - name: Checkout repository
@@ -48,6 +45,10 @@ jobs:
         if [ -z "$VERSION" ]; then
           VERSION=$(grep -m 1 'ENV VERSION' Dockerfile | cut -d' ' -f3 | tr -d '"')
         fi
+        if [ -z "$VERSION" ]; then
+          VERSION="latest"  # Fallback to 'latest' if no version found
+        fi
+        echo "VERSION=$VERSION"
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Build Docker image
