@@ -7,6 +7,12 @@ on:
   # pull_request:
   #   branches:
   #     - main  # Trigger when a PR is opened against the main branch
+  workflow_dispatch:
+  inputs:
+    version:
+      description: 'Version tag for the Docker image'
+      required: true
+      default: 'latest'
 
 jobs:
   build:
