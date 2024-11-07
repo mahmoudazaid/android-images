@@ -2,6 +2,8 @@ FROM mahmoudazaid/android-build-tools:35.0.0
 
 LABEL version="10"
 
+ENV DEBIAN_FRONTEND noninteractive
+
 # Set working directory
 WORKDIR /
 

@@ -51,6 +51,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
+        docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
 
     - name: Push Docker image
       run: |
