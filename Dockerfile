@@ -1,6 +1,6 @@
 FROM mahmoudazaid/android-build-tools:35.0.0
 
-LABEL version="10"
+LABEL version="11"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -33,7 +33,7 @@ RUN apt update && apt install --no-install-recommends -y \
 # Android10:    API_LEVEL="29"  ##
 # Android9:     API_LEVEL="28"  ##
 #=================================
-ARG API_LEVEL="29"
+ARG API_LEVEL="30"
 
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
