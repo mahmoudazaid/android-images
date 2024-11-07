@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -36,7 +36,7 @@ jobs:
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: ${{ variables.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Extract version from Dockerfile
@@ -50,12 +50,12 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
+        docker build -t ${{ variables.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
 
     - name: Push Docker image
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/android:${{ env.VERSION }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/android:latest
+        docker push ${{ variables.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+        docker push ${{ variables.DOCKER_USERNAME }}/android:latest
 
     - name: Clean up Docker images
       run: |
