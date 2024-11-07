@@ -38,7 +38,7 @@ jobs:
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ DOCKER_USERNAME }}
+        username: ${{ env.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Extract version from Dockerfile
@@ -52,12 +52,12 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ DOCKER_USERNAME }}/android:${{ env.VERSION }} .
+        docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
 
     - name: Push Docker image
       run: |
-        docker push ${{ DOCKER_USERNAME }}/android:${{ env.VERSION }}
-        docker push ${{ DOCKER_USERNAME }}/android:latest
+        docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+        docker push ${{ env.DOCKER_USERNAME }}/android:latest
 
     - name: Clean up Docker images
       run: |
