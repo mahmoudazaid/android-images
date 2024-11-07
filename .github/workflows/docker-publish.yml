@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: "mahmoudazaid"
-      BASE_IMAGE: "env.DOCKER_USERNAME/android-build-tools:35.0.0"  # Define the base image to check and use
+      BASE_IMAGE: ${{ env.DOCKER_USERNAME }}/android-build-tools:35.0.0  # Define the base image to check and use
       VERSION: ${{ github.event.inputs.version || 'latest' }}  # Default to 'latest' version if not provided
 
     steps:
