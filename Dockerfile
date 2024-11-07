@@ -1,5 +1,7 @@
 FROM mahmoudazaid/android-build-tools:35.0.0
 
+LABEL version="10"
+
 # Set working directory
 WORKDIR /
 
