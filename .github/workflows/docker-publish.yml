@@ -44,12 +44,12 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ env.VERSION }} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
 
     - name: Push Docker image
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ env.VERSION }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/android:latest
 
     - name: Clean up Docker images
       run: |
