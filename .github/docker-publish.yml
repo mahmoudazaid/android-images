@@ -17,12 +17,12 @@ env:
 
 jobs:
   build:
-    uses: .github/workflows/build.yml
+    uses: /.github/workflows/build.yml
 
   scan:
-    uses: .github/workflows/scan.yml
+    uses: /.github/workflows/scan.yml
     needs: build
 
   deploy:
-    uses: .github/workflows/deploy.yml
+    uses: /.github/workflows/deploy.yml
     needs: [build, scan]
