@@ -10,6 +10,8 @@ on:
         description: 'Version tag for the Docker image'
         required: true
         default: 'latest'
+  repository_dispatch:
+    types: [docker-image-updated]
 
 jobs:
   build:
