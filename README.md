@@ -32,16 +32,16 @@ The Docker image is based on the official Android SDK image and is preconfigured
 
 ### Android SDK Configurations
 
-| Android Version | API Level | Build Tools Version |
-|-----------------|-----------|---------------------|
-| Android15       | 35        | 35.0.0              |
-| Android14       | 34        | 35.0.0              |
-| Android13       | 33        | 35.0.0              |
-| Android12L      | 32        | 35.0.0              |
-| Android12       | 31        | 35.0.0              |
-| Android11       | 30        | 35.0.0              |
-| Android10       | 29        | 35.0.0              |
-| Android9        | 28        | 35.0.0              |
+| Android Version | API Level |
+|-----------------|-----------|
+| Android15       | 35        |
+| Android14       | 34        |
+| Android13       | 33        |
+| Android12L      | 32        |
+| Android12       | 31        |
+| Android11       | 30        |
+| Android10       | 29        |
+| Android9        | 28        |
 
 ### Dockerfile Configuration
 
