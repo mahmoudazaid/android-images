@@ -18,18 +18,18 @@ env:
 
 jobs:
   build:
-    uses: .github/workflows/build.yml
+    uses: ./github/workflows/build.yml
     with:
       version: ${{ env.VERSION }}  # Ensure version is passed to build
 
   scan:
-    uses: .github/workflows/scan.yml
+    uses: ./github/workflows/scan.yml
     needs: build
     with:
       version: ${{ env.VERSION }}  # Ensure version is passed to scan
 
   deploy:
-    uses: .github/workflows/deploy.yml
+    uses: ./github/workflows/deploy.yml
     needs: [build, scan]
     with:
       version: ${{ env.VERSION }}  # Ensure version is passed to deploy
