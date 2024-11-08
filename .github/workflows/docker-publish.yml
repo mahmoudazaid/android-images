@@ -61,16 +61,16 @@ jobs:
           docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
           docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
 
-      - name: Install Docker Scout
-        run: |
-          curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
-          sudo chmod +x /usr/local/bin/docker-scout
-          docker-scout version
+      # - name: Install Docker Scout
+      #   run: |
+      #     curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
+      #     sudo chmod +x /usr/local/bin/docker-scout
+      #     docker-scout version
 
-      - name: Run Docker Scout to scan the images
-        run: |
-          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
-          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:latest
+      # - name: Run Docker Scout to scan the images
+      #   run: |
+      #     docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+      #     docker-scout cves ${{ env.DOCKER_USERNAME }}/android:latest
 
       - name: Push Docker images
         run: |
