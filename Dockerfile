@@ -1,6 +1,6 @@
-ARG BUILD_TOOLS_VERSION=35.0.0
+ARG BUILD_TOOLS=35.0.0
 
-FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS_VERSION}
+FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS}
 
 ENV DEBIAN_FRONTEND noninteractive
 
