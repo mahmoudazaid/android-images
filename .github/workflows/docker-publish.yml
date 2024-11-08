@@ -16,13 +16,76 @@ env:
   DOCKER_SCOUT_URL: "https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz"
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/docker
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version from Dockerfile if not provided
+        id: extract_version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            VERSION=$(grep -m 1 'LABEL version' Dockerfile | cut -d '=' -f2 | tr -d '"')
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
   build:
-    uses: ./.github/workflows/build.yml
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
+          docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
 
   scan:
-    uses: ./.github/workflows/scan.yml
+    runs-on: ubuntu-latest
     needs: build
 
+    steps:
+      - name: Install Docker Scout
+        run: |
+          curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/docker-scout
+          docker-scout version
+
+      - name: Run Docker Scout to scan the images
+        run: |
+          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:latest
+
   deploy:
-    uses: ./.github/workflows/deploy.yml
+    runs-on: ubuntu-latest
     needs: [build, scan]
+
+    steps:
+      - name: Push Docker images
+        run: |
+          docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+          docker push ${{ env.DOCKER_USERNAME }}/android:latest
+
+      - name: Clean up Docker images
+        run: |
+          docker image prune -af
