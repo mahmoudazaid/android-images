@@ -14,7 +14,6 @@ on:
 env:
   DOCKER_USERNAME: "mahmoudazaid"
   DOCKER_SCOUT_URL: "https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz"
-  VERSION: latest
 
 jobs:
   setup:
@@ -47,6 +46,8 @@ jobs:
             VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
             echo "VERSION=$VERSION"
             echo "VERSION=$VERSION" >> $GITHUB_ENV
+    outputs:
+      image_version: ${{ steps.extract_version.outputs.VERSION }}
         
   build:
     runs-on: ubuntu-latest
