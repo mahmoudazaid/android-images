@@ -18,19 +18,17 @@
 
 ## Overview
 
-This project uses a Docker container with the Android SDK to build Android applications, using build tools version `35.0.0` and targeting Android API Level 34.
+This project uses a Docker container with the Android SDK to build Android applications, using build tools.
 
 ## Requirements
 
 - Docker (version 20.10+)
-- Android SDK (version 34)
-- Java JDK 8 or higher
 
 ## Docker Image Details
 
 The Docker image is based on the official Android SDK image and is preconfigured with Android SDK packages and build tools.
 
-### Android SDK Configurations
+### Android Versions
 
 | Android Version | API Level |
 |-----------------|-----------|
@@ -46,7 +44,7 @@ The Docker image is based on the official Android SDK image and is preconfigured
 ### Dockerfile Configuration
 
 - **Build Tools Version:** `35.0.0`
-- **Target API Level:** `34`
+- **Target API Level:** `35`
 - **Architecture:** `x86_64`
 - **Target System Image:** `google_apis_playstore`
 - **Platform Version:** `platforms;android-34`
