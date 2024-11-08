@@ -17,12 +17,12 @@ env:
 
 jobs:
   build:
-    uses: ./.github/jobs/build.yml
+    uses: mahmoudazaid/android-images/.github/jobs/build.yml@main
 
   scan:
-    uses: ./.github/jobs/scan.yml
+    uses: mahmoudazaid/android-images/.github/jobs/scan.yml@main
     needs: build
 
   deploy:
-    uses: ./.github/jobs/deploy.yml
+    uses: mahmoudazaid/android-images/.github/jobs/deploy.yml@main
     needs: [build, scan]
