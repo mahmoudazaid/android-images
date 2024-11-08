@@ -7,13 +7,13 @@ steps:
   - name: Log in to Docker Hub
     uses: docker/login-action@v3
     with:
-      username: ${{ env.DOCKER_USERNAME }}      
+      username: ${{ env.DOCKER_USERNAME }}
       password: ${{ secrets.DOCKER_PASSWORD }}
-      
+
   - name: Push Docker images
     run: |
-      docker push ${{ env.DOCKER_USERNAME }}/android:${{ needs.build.outputs.image_version }}
-      docker push ${{ env.DOCKER_USERNAME }}/android:latest
+      docker push ${{ needs.build.outputs.image_version }}
+      docker push ${{ needs.build.outputs.image_version }}:latest
 
   - name: Clean up Docker images
     run: |
