@@ -43,13 +43,10 @@ jobs:
       - name: Extract version from Dockerfile if not provided
         id: extract_version
         run: |
-          if [ -z "${{ github.event.inputs.version }}" ]; then
-            VERSION=$(grep -m 1 'LABEL version' Dockerfile | cut -d '=' -f2 | tr -d '"')
-          else
-            VERSION="${{ github.event.inputs.version }}"
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
+            VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
+            echo "VERSION=$VERSION"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+        
   build:
     runs-on: ubuntu-latest
     needs: setup
