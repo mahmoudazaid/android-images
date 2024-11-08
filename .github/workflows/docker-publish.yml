@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
+      - main  
   workflow_dispatch:
     inputs:
       version:
@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: "mahmoudazaid"
-      BASE_IMAGE: "mahmoudazaid/android-build-tools:35.0.0"  # Define the base image to check and use
-      VERSION: ${{ github.event.inputs.version || 'latest' }}  # Default to 'latest' version if not provided
 
     steps:
     - name: Checkout repository
@@ -40,16 +38,9 @@ jobs:
         username: ${{ env.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Check if base image needs update
-      run: |
-        # Pull the base image to check for updates
-        docker pull ${BASE_IMAGE}
-        echo "Base image ${BASE_IMAGE} pulled successfully."
-
     - name: Extract version from Dockerfile
       id: extract_version
       run: |
-        # Extract the version from the Dockerfile if it's set there
         VERSION=$(grep -m 1 'LABEL version' Dockerfile | cut -d '=' -f2 | tr -d '"')
         if [ -z "$VERSION" ]; then
           VERSION=$(grep -m 1 'ENV VERSION' Dockerfile | cut -d '=' -f2 | tr -d '"')
@@ -59,17 +50,14 @@ jobs:
 
     - name: Build Docker image
       run: |
-        # Build and tag the Docker image
         docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
         docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
 
     - name: Push Docker image
       run: |
-        # Push the Docker images to Docker Hub
         docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
         docker push ${{ env.DOCKER_USERNAME }}/android:latest
 
     - name: Clean up Docker images
       run: |
-        # Clean up dangling Docker images
         docker image prune -af
