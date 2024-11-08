@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: "mahmoudazaid"
-      DOCKER_SCOUT: https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz
+      DOCKER_SCOUT_URL: https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz
 
     steps:
     - name: Checkout repository
@@ -41,7 +41,7 @@ jobs:
         username: ${{ env.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Set version from repository_dispatch payload (triggered by android-build-tools)
+    # Set version from repository_dispatch payload if triggered by android-build-tools
     - name: Set Version from Dispatch Event
       if: github.event_name == 'repository_dispatch'
       run: |
@@ -50,39 +50,37 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         echo "BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION" >> $GITHUB_ENV
 
-    # Extract version from Dockerfile if it's not set by dispatch
+    # Extract version from Dockerfile if not set by dispatch
     - name: Extract version from Dockerfile (if not set by dispatch)
       id: extract_version
       if: env.VERSION == ''
       run: |
         VERSION=$(grep -m 1 'LABEL version' Dockerfile | cut -d '=' -f2 | tr -d '"')
-        echo "VERSION=$VERSION"
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-    # Extract build tools version from Dockerfile (if available)
+    # Extract build tools version from Dockerfile if available
     - name: Extract build tools version from Dockerfile
       id: extract_build_tools
       run: |
         BUILD_TOOLS_VERSION=$(grep -m 1 'ENV BUILD_TOOLS' Dockerfile | cut -d '=' -f2 | tr -d '"')
-        echo "BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION"
         echo "BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION" >> $GITHUB_ENV
 
-    # Build the Docker image based on version and build tools version
+    # Build Docker image based on version and build tools version
     - name: Build Docker image
       run: |
+        docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
+        docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
+        
         if [ -n "$BUILD_TOOLS_VERSION" ]; then
           docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }} .
         fi
-        docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
-        docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
     
-    - name: Install Docker Scout ${{ env.DOCKER_SCOUT }}
+    - name: Install Docker Scout
       run: |
-          curl -fsSL ${{ env.DOCKER_SCOUT }} | tar xz -C /usr/local/bin
-          sudo ln -s /usr/local/bin/docker-scout /usr/bin/scout
-          docker-scout version
+        curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
+        sudo chmod +x /usr/local/bin/docker-scout
+        docker-scout version
   
-
     # Run Docker Scout to scan the image for vulnerabilities
     - name: Run Docker Scout to scan the image for vulnerabilities
       run: |
@@ -93,13 +91,13 @@ jobs:
         fi
 
     # Push Docker images to Docker Hub
-    - name: Push Docker image
+    - name: Push Docker images
       run: |
-        if [ -n "$BUILD_TOOLS_VERSION" ]; then
-        docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }}
-        fi
         docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
         docker push ${{ env.DOCKER_USERNAME }}/android:latest
+        if [ -n "$BUILD_TOOLS_VERSION" ]; then
+          docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }}
+        fi
 
     # Clean up Docker images to free space
     - name: Clean up Docker images
