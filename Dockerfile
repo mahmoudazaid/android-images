@@ -1,4 +1,4 @@
-ARG BUILD_TOOLS=latest
+ARG BUILD_TOOLS=35.0.0
 
 FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS}
 
