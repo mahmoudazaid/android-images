@@ -45,14 +45,14 @@ jobs:
       - name: Extract version from Dockerfile if not provided
         id: extract_version
         run: |
-          VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
+          VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+ANDROID_VERSION=' Dockerfile | cut -d '=' -f2 | tr -d '"')
           echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV 
       
       - name: Fail if no version is set
         if: env.VERSION == ''
         run: |
-          echo "Error: No version found in Dockerfile or provided through dispatch."
+          echo "Error: ANDROID_VERSION is missed in the Dockerfile."
           exit 1
 
       - name: Build Docker image
