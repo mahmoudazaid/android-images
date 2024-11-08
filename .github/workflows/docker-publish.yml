@@ -9,6 +9,8 @@ on:
       version:
         description: 'Version tag for the Docker image'
         default: 'latest'
+  repository_dispatch:
+    types: [docker-image-updated]
 
 env:
   DOCKER_USERNAME: "mahmoudazaid"
@@ -46,6 +48,12 @@ jobs:
           VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
           echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV 
+      
+      - name: Fail if no version is set
+        if: env.VERSION == ''
+        run: |
+          echo "Error: No version found in Dockerfile or provided through dispatch."
+          exit 1
 
       - name: Build Docker image
         run: |
