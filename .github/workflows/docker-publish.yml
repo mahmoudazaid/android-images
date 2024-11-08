@@ -54,6 +54,7 @@ jobs:
     steps:
       - name: Build Docker image
         run: |
+          echo ${{ env.VERSION }}
           docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
           docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
 
