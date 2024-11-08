@@ -37,6 +37,6 @@ steps:
     run: |
       docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
       docker build -t ${{ env.DOCKER_USERNAME }}/android:latest .
-      
-  outputs:
-    image_version: ${{ steps.extract_version.outputs.VERSION }}
+
+outputs:
+  image_version: ${{ steps.extract_version.outputs.VERSION }}
