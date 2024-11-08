@@ -1,12 +1,7 @@
 name: Deploy Docker Image
 
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Deploy last build"
-        required: true
-        default: "latest"
+on: 
+  workflow_call: 
 
 jobs:
   deploy:
