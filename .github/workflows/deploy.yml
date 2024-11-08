@@ -1,12 +1,17 @@
 name: Deploy Docker Image
 
-on: 
-  workflow_call: {}  # Allows it to be reusable when called from other workflows
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Deploy last build"
+        required: true
+        default: "latest"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-        
+
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3

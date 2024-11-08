@@ -1,7 +1,12 @@
 name: Build Docker Image
 
-on: 
-  workflow_call: {}  # Allows it to be reusable when called from other workflows
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Build a nee Image"
+        required: true
+        default: "latest"
 
 jobs:
   build:

@@ -1,12 +1,16 @@
 name: Scan Docker Image
 
-on: 
-  workflow_call: {}  # Allows this file to be called from another workflow
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Scan Last Image"
+        required: true
+        default: "latest"
 jobs:
   scan:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
