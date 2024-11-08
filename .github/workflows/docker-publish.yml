@@ -43,12 +43,9 @@ jobs:
       - name: Extract version from Dockerfile if not provided
         id: extract_version
         run: |
-            VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
-            echo "VERSION=$VERSION"
-            echo "VERSION" >> $GITHUB_OUTPUT
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
+          VERSION=$(grep -m 1 -E '^(LABEL|ENV|ARG)\s+version=' Dockerfile | cut -d '=' -f2 | tr -d '"')
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV 
 
       - name: Build Docker image
         run: |
