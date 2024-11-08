@@ -18,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: "mahmoudazaid"
-      DOCKER_SCOUT_URL: https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz
 
     steps:
     - name: Checkout repository
@@ -65,7 +64,7 @@ jobs:
         BUILD_TOOLS_VERSION=$(grep -m 1 'ENV BUILD_TOOLS' Dockerfile | cut -d '=' -f2 | tr -d '"')
         echo "BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION" >> $GITHUB_ENV
 
-    # Build Docker image based on version and build tools version
+    # Build Docker images with version and build tools version
     - name: Build Docker image
       run: |
         docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} .
@@ -74,29 +73,54 @@ jobs:
         if [ -n "$BUILD_TOOLS_VERSION" ]; then
           docker build -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }} .
         fi
-    
+
+    # Pass image details for next jobs
+    outputs:
+      image_version: ${{ steps.extract_version.outputs.VERSION }}
+      build_tools_version: ${{ steps.extract_build_tools.outputs.BUILD_TOOLS_VERSION }}
+
+  scan:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      DOCKER_SCOUT_URL: https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz
+
+    steps:
     - name: Install Docker Scout
       run: |
         curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
         sudo chmod +x /usr/local/bin/docker-scout
         docker-scout version
-  
-    # Run Docker Scout to scan the image for vulnerabilities
-    - name: Run Docker Scout to scan the image for vulnerabilities
+
+    # Run Docker Scout to scan images
+    - name: Run Docker Scout to scan the images
       run: |
-        docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+        docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ needs.build.outputs.image_version }}
         docker-scout cves ${{ env.DOCKER_USERNAME }}/android:latest
-        if [ -n "$BUILD_TOOLS_VERSION" ]; then
-          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }}
+        if [ -n "${{ needs.build.outputs.build_tools_version }}" ]; then
+          docker-scout cves ${{ env.DOCKER_USERNAME }}/android:${{ needs.build.outputs.image_version }}-${{ needs.build.outputs.build_tools_version }}
         fi
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, scan]
+    env:
+      DOCKER_USERNAME: "mahmoudazaid"
+
+    steps:
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     # Push Docker images to Docker Hub
     - name: Push Docker images
       run: |
-        docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}
+        docker push ${{ env.DOCKER_USERNAME }}/android:${{ needs.build.outputs.image_version }}
         docker push ${{ env.DOCKER_USERNAME }}/android:latest
-        if [ -n "$BUILD_TOOLS_VERSION" ]; then
-          docker push ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }}-${{ env.BUILD_TOOLS_VERSION }}
+        if [ -n "${{ needs.build.outputs.build_tools_version }}" ]; then
+          docker push ${{ env.DOCKER_USERNAME }}/android:${{ needs.build.outputs.image_version }}-${{ needs.build.outputs.build_tools_version }}
         fi
 
     # Clean up Docker images to free space
