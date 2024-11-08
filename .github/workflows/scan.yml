@@ -8,11 +8,11 @@ steps:
     uses: docker/login-action@v3
     with:
       username: ${{ env.DOCKER_USERNAME }}
-      password: ${{ env.DOCKER_PASSWORD }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
 
   - name: Install Docker Scout
     run: |
-      curl -fsSL ${{ env.DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
+      curl -fsSL ${{ env..DOCKER_SCOUT_URL }} | tar xz -C /usr/local/bin
       sudo chmod +x /usr/local/bin/docker-scout
       docker-scout version
 

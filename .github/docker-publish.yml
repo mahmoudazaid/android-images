@@ -13,17 +13,23 @@ on:
 
 env:
   DOCKER_USERNAME: "mahmoudazaid"
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_SCOUT_URL: "https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz"
+  VERSION: ${{ github.event.inputs.version }}  # Pass version as env variable
 
 jobs:
   build:
     uses: .github/workflows/build.yml
+    with:
+      version: ${{ env.VERSION }}  # Ensure version is passed to build
 
   scan:
     uses: .github/workflows/scan.yml
     needs: build
+    with:
+      version: ${{ env.VERSION }}  # Ensure version is passed to scan
 
   deploy:
     uses: .github/workflows/deploy.yml
     needs: [build, scan]
+    with:
+      version: ${{ env.VERSION }}  # Ensure version is passed to deploy
