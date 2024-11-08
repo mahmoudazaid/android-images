@@ -1,0 +1,20 @@
+name: Deploy Docker Image
+
+runs-on: ubuntu-latest
+needs: [build, scan]
+
+steps:
+  - name: Log in to Docker Hub
+    uses: docker/login-action@v3
+    with:
+      username: ${{ env.DOCKER_USERNAME }}
+      password: ${{ env.DOCKER_PASSWORD }}
+
+  - name: Push Docker images
+    run: |
+      docker push ${{ needs.build.outputs.image_version }}
+      docker push ${{ needs.build.outputs.image_version }}:latest
+
+  - name: Clean up Docker images
+    run: |
+      docker image prune -af
