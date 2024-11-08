@@ -1,0 +1,29 @@
+name: Docker Publish
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for the Docker image'
+        required: true
+        default: 'latest'
+
+env:
+  DOCKER_USERNAME: "mahmoudazaid"
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_SCOUT_URL: "https://github.com/docker/scout-cli/releases/download/v1.15.0/docker-scout_1.15.0_linux_amd64.tar.gz"
+
+jobs:
+  build:
+    uses: ./build.yml
+
+  scan:
+    uses: ./scan.yml
+    needs: build
+
+  deploy:
+    uses: ./deploy.yml
+    needs: [build, scan]
