@@ -1,7 +1,7 @@
 # Android Images
 
 ## Badges
-[![Build Status](https://github.com/mahmoudazaid/android-images/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/mahmoudazaid/android-images/actions/workflows/docker-publish.yml)
+[![Build Status](https://github.com/mahmoudazaid/android-images/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/mahmoudazaid/android-images/actions/workflows/docker-publish.yml)
 ![Build Tools Version](https://img.shields.io/badge/Build%20Tools-35.0.0-blue)
 ![Android Version](https://img.shields.io/badge/Android%20Version-14-blue)
 ![Android API](https://img.shields.io/badge/Android%20Version-34-blue)
