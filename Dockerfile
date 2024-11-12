@@ -16,8 +16,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # Android10:    API_LEVEL="29"
 # Android9:     API_LEVEL="28"
 #=================================
-LABEL ANDROID_VERSION=13
-ENV API_LEVEL="33"
+LABEL ANDROID_VERSION=14
+ENV API_LEVEL="34"
 
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
