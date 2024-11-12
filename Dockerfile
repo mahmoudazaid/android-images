@@ -53,21 +53,22 @@ RUN apt update && apt install --no-install-recommends -y \
 #=========================
 # Copying Scripts to /tmp
 #=========================
-COPY install-sdk-packages.sh /tmp/
+COPY . /
 
 #=========================
 # Setting Executable Permissions
 #=========================
-RUN chmod a+x /tmp/install-sdk-packages.sh
+RUN chmod a+x ./install-sdk-packages.sh
 
 #====================================
 # Run Scripts for SDK Package Installation
 #====================================
-RUN /tmp/install-sdk-packages.sh --ANDROID_SDK_PACKAGES $ANDROID_SDK_PACKAGES
+RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES $ANDROID_SDK_PACKAGES
 
-#====================================
-# Clean up the scripts
-#====================================
-RUN rm -f /tmp/install-sdk-packages.sh
+#============================================
+# Clean up the installation files and caches
+#============================================
+RUN rm -f install-sdk-packages.sh && \
+    rm -rf /tmp/* /var/tmp/*
 
 CMD [ "/bin/bash" ]
