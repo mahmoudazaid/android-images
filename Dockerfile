@@ -24,13 +24,8 @@ ENV APPIUM=false
 # Android10:    API_LEVEL="29"
 # Android9:     API_LEVEL="28"
 #=================================
-<<<<<<< HEAD
 LABEL ANDROID_VERSION=13
 ENV API_LEVEL="33"
-=======
-LABEL ANDROID_VERSION=10
-ENV API_LEVEL="29"
->>>>>>> e2fa226 (Update Dockerfile)
 
 #============================#
 # Android SDK Configurations #
@@ -67,15 +62,15 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-#==============================#
+#======================================#
 # Copy and Set Permissions for Scripts #
-#==============================#
+#======================================#
 COPY . /
 RUN chmod +x ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh ./start-appium.sh
 
-#====================================#
-# Install Android SDK Packages       #
-#====================================#
+#==============================#
+# Install Android SDK Packages #
+#==============================#
 RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 
 #============================#
