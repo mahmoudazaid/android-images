@@ -2,9 +2,14 @@
 ARG BUILD_TOOLS_VERSION=35.0.0
 FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS_VERSION}
 
-# Prevent interaction prompts
+#=============================#
+# Prevent interaction prompts #
+#=============================#
 ENV DEBIAN_FRONTEND=noninteractive
 
+#===============================#
+# Set Appium not run by default #
+#===============================#
 ENV APPIUM=false
 
 #=================================
