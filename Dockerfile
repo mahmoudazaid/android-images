@@ -1,24 +1,17 @@
-ARG BUILD_TOOLS=35.0.0
+# Set build tools version (default 35.0.0) and base image
+ARG BUILD_TOOLS_VERSION=35.0.0
+FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS_VERSION}
 
-FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS}
+# Prevent interaction prompts
+ENV DEBIAN_FRONTEND=noninteractive
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV APPIUM=false
 
-#=================================
-# Android SDK configurations     #
-#=================================
-# Android15:    API_LEVEL="35"
-# Android14:    API_LEVEL="34"
-# Android13:    API_LEVEL="33"
-# Android12L:   API_LEVEL="32"
-# Android12:    API_LEVEL="31"
-# Android11:    API_LEVEL="30"
-# Android10:    API_LEVEL="29"
-# Android9:     API_LEVEL="28"
-#=================================
-LABEL ANDROID_VERSION=15
-ENV API_LEVEL="35"
-
+#============================#
+# Android SDK Configurations #
+#============================#
+LABEL ANDROID_VERSION="15"
+ARG API_LEVEL="35"
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
 ARG ANDROID_API_LEVEL="android-${API_LEVEL}"
@@ -27,15 +20,15 @@ ENV EMULATOR_PACKAGE="system-images;${ANDROID_API_LEVEL};${ANDROID_APIS}"
 ARG PLATFORM_VERSION="platforms;${ANDROID_API_LEVEL}"
 ARG ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION}"
 
-# Set working directory
+# Set working directory and use bash shell
 WORKDIR /
-
-#=============================
-# Install Dependencies
-#=============================
 SHELL ["/bin/bash", "-c"]
 
-RUN apt update && apt install --no-install-recommends -y \
+#=============================#
+# Install System Dependencies #
+#=============================#
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
     tzdata \
     curl \
     wget \
@@ -44,31 +37,29 @@ RUN apt update && apt install --no-install-recommends -y \
     libnss3 \
     xauth \
     xvfb \
-    procps \
-    && ln -s /usr/bin/python3 /usr/bin/python && \
+    procps && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
-#=========================
-# Copying Scripts to /tmp
-#=========================
+#==============================#
+# Copy and Set Permissions for Scripts #
+#==============================#
 COPY . /
+RUN chmod +x ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh ./start-appium.sh
 
-#=========================
-# Setting Executable Permissions
-#=========================
-RUN chmod a+x ./install-sdk-packages.sh
+#====================================#
+# Install Android SDK Packages       #
+#====================================#
+RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 
-#====================================
-# Run Scripts for SDK Package Installation
-#====================================
-RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES $ANDROID_SDK_PACKAGES
-
-#============================================
-# Clean up the installation files and caches
-#============================================
-RUN rm -f install-sdk-packages.sh && \
+#============================#
+# Clean up unnecessary files #
+#============================#
+RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
     rm -rf /tmp/* /var/tmp/*
 
-CMD [ "/bin/bash" ]
+#===========================#
+# Default entrypoint script #
+#===========================#
+ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appium.sh; else /bin/bash; fi"]
