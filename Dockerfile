@@ -99,4 +99,4 @@ ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appi
 # Check Appium server Health #
 # ===========================#
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD curl --silent --fail localhost:4723/wd/hub/status || exit 1
+  CMD curl --silent --fail localhost:${APPIUM_PORT}/wd/hub/status || exit 1
