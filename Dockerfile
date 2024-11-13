@@ -12,26 +12,26 @@ ENV DEBIAN_FRONTEND=noninteractive
 #===============================#
 ENV APPIUM=false
 
-#=================================
-# Android SDK configurations     #
-#=================================
-# Android15:    API_LEVEL="35"
-# Android14:    API_LEVEL="34"
-# Android13:    API_LEVEL="33"
-# Android12L:   API_LEVEL="32"
-# Android12:    API_LEVEL="31"
-# Android11:    API_LEVEL="30"
-# Android10:    API_LEVEL="29"
-# Android9:     API_LEVEL="28"
-#=================================
-LABEL ANDROID_VERSION=13
-ENV API_LEVEL="33"
+#=====================#
+# APPIUM Version ARGs #
+#=====================#
+ARG APPIUM_VERSION="2.12.1"
+ARG UIAUTOMATOR_VERSION="3.8.0"
+ARG DEVICE_FARM_VERSION="9.2.3"
 
-#============================#
-# Android SDK Configurations #
-#============================#
-LABEL ANDROID_VERSION="15"
+
+#===================#
+# Node Version ARGs #
+#===================#
+ARG NODE_VERSION="22"
+ARG NPM_VERSION="10.9.0"
+
+#================================#
+# Android SDK configurations     #
+#================================#
+LABEL ANDROID_VERSION=13
 ARG API_LEVEL="35"
+
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
 ARG ANDROID_API_LEVEL="android-${API_LEVEL}"
@@ -40,7 +40,9 @@ ENV EMULATOR_PACKAGE="system-images;${ANDROID_API_LEVEL};${ANDROID_APIS}"
 ARG PLATFORM_VERSION="platforms;${ANDROID_API_LEVEL}"
 ARG ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION}"
 
-# Set working directory and use bash shell
+#==========================================#
+# Set working directory and use bash shell #
+#==========================================#
 WORKDIR /
 SHELL ["/bin/bash", "-c"]
 
@@ -68,18 +70,27 @@ RUN apt-get update && \
 COPY . /
 RUN chmod +x ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh ./start-appium.sh
 
-#==============================#
-# Install Android SDK Packages #
-#==============================#
-RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
+#=============#
+# Run Scripts #
+#=============#
+RUN ./install-node.sh \
+    --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
+
+RUN ./install-appium.sh \ 
+    --APPIUM_VERSION=${APPIUM_VERSION} \
+    --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} \
+    --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
+
+RUN ./install-sdk-packages.sh \
+    --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 
 #============================#
 # Clean up unnecessary files #
 #============================#
 RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
     rm -rf /tmp/* /var/tmp/*
-    
+
 #===========================#
 # Default entrypoint script #
 #===========================#
-ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appium.sh; else /bin/bash; fi"]
+ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appium.sh; else tail -f /dev/null; fi"]
