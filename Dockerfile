@@ -5,7 +5,26 @@ FROM mahmoudazaid/android-build-tools:${BUILD_TOOLS_VERSION}
 # Prevent interaction prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
+<<<<<<< HEAD
 ENV APPIUM=false
+=======
+ENV DEBIAN_FRONTEND noninteractive
+
+#=================================
+# Android SDK configurations     #
+#=================================
+# Android15:    API_LEVEL="35"
+# Android14:    API_LEVEL="34"
+# Android13:    API_LEVEL="33"
+# Android12L:   API_LEVEL="32"
+# Android12:    API_LEVEL="31"
+# Android11:    API_LEVEL="30"
+# Android10:    API_LEVEL="29"
+# Android9:     API_LEVEL="28"
+#=================================
+LABEL ANDROID_VERSION=9
+ENV API_LEVEL="28"
+>>>>>>> 7d2dbf4 (Update Dockerfile)
 
 #============================#
 # Android SDK Configurations #
@@ -59,7 +78,11 @@ RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
     rm -rf /tmp/* /var/tmp/*
 
+<<<<<<< HEAD
 #===========================#
 # Default entrypoint script #
 #===========================#
 ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appium.sh; else /bin/bash; fi"]
+=======
+CMD [ "/bin/bash" ]
+>>>>>>> 7d2dbf4 (Update Dockerfile)
