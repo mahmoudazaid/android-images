@@ -1,4 +1,4 @@
-name: Docker Build and Run Check
+name: Check Docker Image Check
 
 on:
   pull_request:
