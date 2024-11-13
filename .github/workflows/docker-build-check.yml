@@ -30,8 +30,7 @@ jobs:
 
     - name: Check if the Docker image runs
       run: |
-        # Run the image and check if it's running
-        docker run -d  -e APPIUM=true--name test-android-image android-image:${{ github.sha }}  # Run image in detached mode
+        docker run -d -e APPIUM=true --name test-android-image android-image:${{ github.sha }}
         sleep 10  
         docker ps -a
         docker logs android-image
