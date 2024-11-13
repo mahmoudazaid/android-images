@@ -24,8 +24,13 @@ ENV APPIUM=false
 # Android10:    API_LEVEL="29"
 # Android9:     API_LEVEL="28"
 #=================================
+<<<<<<< HEAD
 LABEL ANDROID_VERSION=13
 ENV API_LEVEL="33"
+=======
+LABEL ANDROID_VERSION=10
+ENV API_LEVEL="29"
+>>>>>>> e2fa226 (Update Dockerfile)
 
 #============================#
 # Android SDK Configurations #
