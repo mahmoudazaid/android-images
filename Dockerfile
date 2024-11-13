@@ -94,9 +94,3 @@ RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
 # Default entrypoint script #
 #===========================#
 ENTRYPOINT ["/bin/bash", "-c", "if [ \"$APPIUM\" = \"true\" ]; then ./start-appium.sh; else tail -f /dev/null; fi"]
-
-# ===========================#
-# Check Appium server Health #
-# ===========================#
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD curl --silent --fail localhost:${APPIUM_PORT}/wd/hub/status || exit 1
