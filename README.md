@@ -19,18 +19,21 @@ You can use this image to build your own Docker container with emulators, run Ap
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
-2. [How to Build](#how-to-build)
+2. [Prerequisites](#prerequisites)
+3. [Requirements](#requirements)
+4. [How to Build](#how-to-build)
    - [Build without passing any arguments](#1-build-without-passing-any-arguments)
    - [Build with specific arguments](#2-build-with-specific-arguments)
-3. [How to Run](#how-to-run)
-   - [Run with default settings](#3-run-with-default-settings)
+5. [How to Run](#how-to-run)
+   - [Run with default settings](#3-run-the-image-with-default-settings)
    - [Run with customized settings](#4-run-with-customized-settings)
    - [Additional Appium Configurations](#5-additional-appium-configurations)
-4. [Build and Run Variables](#build-and-run-variables)
+6. [Docker Image Details](#docker-image-details)
+   - [Android Versions](#android-versions)
    - [Build Variables](#build-variables)
    - [Run Variables](#run-variables)
-5. [Troubleshooting](#troubleshooting)
-6. [License](#license)
+7. [Troubleshooting](#troubleshooting)
+8. [License](#license)
 
 ## Project Overview
 
@@ -42,6 +45,10 @@ You can use this image to build your own Docker container with emulators, run Ap
 
 - Docker
 - Basic knowledge of Appium and Android Emulator setup
+
+## Requirements
+
+- Docker (version 20.10+)
 
 ## How to Build
 
@@ -102,7 +109,22 @@ Example:
 docker run -it -e APPIUM=true -e APPIUM_PORT=4725 -e HUB_ADDRESS="hub.example.com" android-appium
 ```
 
-## Build and Run Variables
+## Docker Image Details
+
+The Docker image is based on the official Android SDK image and is preconfigured with Android SDK packages and build tools.
+
+### Android Versions
+
+| **Android Version** | **API Level** |
+| ------------------- | ------------- |
+| Android15           | 35            |
+| Android14           | 34            |
+| Android13           | 33            |
+| Android12L          | 32            |
+| Android12           | 31            |
+| Android11           | 30            |
+| Android10           | 29            |
+| Android9            | 28            |
 
 ### Build Variables
 
