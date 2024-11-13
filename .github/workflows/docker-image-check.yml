@@ -33,7 +33,7 @@ jobs:
         docker run -d -e APPIUM=true --name test-android-image android-image:${{ github.sha }}
         sleep 10  
         docker ps -a
-        docker logs android-image
+        docker logs test-android-image
 
     - name: Clean up
       run: |
