@@ -71,10 +71,10 @@ COPY ./start.sh /opt/
 # Set Permissions for Scripts #
 #=============================#
 RUN chmod a+x /opt/start.sh \
-    chmod a+x /opt/appium/start-appium.sh \
-    chmod a+x ./install-node.sh \
-    chmod a+x ./install-appium.sh \
-    chmod a+x ./install-sdk-packages.sh
+              /opt/appium/start-appium.sh \
+              ./install-node.sh \
+              ./install-appium.sh \
+              ./install-sdk-packages.sh
 
 #=============#
 # Run Scripts #
