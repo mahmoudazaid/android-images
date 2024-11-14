@@ -30,7 +30,6 @@ ARG NPM_VERSION="10.9.0"
 #================================#
 LABEL ANDROID_VERSION=15
 ARG API_LEVEL="35"
-
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
 ARG ANDROID_API_LEVEL="android-${API_LEVEL}"
@@ -42,7 +41,7 @@ ARG ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION}"
 #===============================#
 # Set working directory         #
 #===============================#
-WORKDIR /opt/android
+WORKDIR /opt
 
 #=============================#
 # Install System Dependencies #
@@ -62,33 +61,45 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-#======================================#
-# Copy and Set Permissions for Scripts #
-#======================================#
-COPY ./scripts /opt/android/scripts
-RUN chmod +x /opt/android/scripts/*.sh
+#==============#
+# Copy scripts #
+#==============#
+COPY ./install-node.sh \
+    ./install-appium.sh \
+    ./install-sdk-packages.sh \
+     /tmp/
+
+COPY ./start-appium.sh \
+     /opt/appium/
+     
+COPY ./start.sh \
+     /opt/
+
+#=============================#
+# Set Permissions for Scripts #
+#=============================#
+RUN chmod +x /opt/* /opt/appium/* /tmp/*
 
 #=============#
 # Run Scripts #
 #=============#
-RUN /opt/android/scripts/install-node.sh \
+RUN /tmp/install-node.sh \
     --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
 
-RUN /opt/android/scripts/install-appium.sh \
+RUN /tmp/install-appium.sh \
     --APPIUM_VERSION=${APPIUM_VERSION} \
     --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} \
     --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
 
-RUN /opt/android/scripts/install-sdk-packages.sh \
+RUN /tmp/install-sdk-packages.sh \
     --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 
 #============================#
 # Clean up unnecessary files #
 #============================#
-RUN rm -f /opt/android/scripts/install-node.sh /opt/android/scripts/install-appium.sh /opt/android/scripts/install-sdk-packages.sh && \
-    rm -rf /tmp/* /var/tmp/*
+RUN rm -rf /tmp/* /var/tmp/*
 
 #===========================#
 # Default entrypoint script #
 #===========================#
-ENTRYPOINT ["/opt/android/scripts/start.sh"]
+ENTRYPOINT ["/opt/start.sh"]
