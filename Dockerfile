@@ -64,15 +64,14 @@ RUN apt-get update && \
 #==============#
 # Copy scripts #
 #==============#
-COPY ./install-appium.sh ./install-node.sh ./install-sdk-packages.sh /tmp/
-RUN ls /tmp
+COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh /tmp/
 COPY ./start-appium.sh /opt/appium/
 COPY ./start.sh /opt/
 
 #=============================#
 # Set Permissions for Scripts #
 #=============================#
-RUN chmod +x /opt/*.sh /opt/appium/*.sh /tmp/*.sh
+RUN chmod a+x /opt/*.sh /opt/appium/*.sh /tmp/*.sh
 
 #=============#
 # Run Scripts #
