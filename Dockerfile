@@ -58,34 +58,32 @@ RUN apt-get update && \
     xvfb \
     procps && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #==============#
 # Copy scripts #
 #==============#
-COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh /tmp/
+COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh . /
 COPY ./start-appium.sh /opt/appium/
 COPY ./start.sh /opt/
 
 #=============================#
 # Set Permissions for Scripts #
 #=============================#
-RUN chmod a+x /opt/* && \
-    chmod a+x /opt/appium/* && \
-    chmod a+x /tmp/*
+RUN chmod a+x /opt/start.sh /opt/appium/start-appium.sh /scripts/*.sh
 
 #=============#
 # Run Scripts #
 #=============#
-RUN /tmp/install-node.sh --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
-# RUN /tmp/install-appium.sh --APPIUM_VERSION=${APPIUM_VERSION} --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
-RUN /tmp/install-sdk-packages.sh --ANDROID_SDK_PACKAGES ${ANDROID_SDK_PACKAGES}
+RUN ./install-node.sh --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
+RUN ./install-appium.sh --APPIUM_VERSION=${APPIUM_VERSION} --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
+RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "${ANDROID_SDK_PACKAGES}"
 
 #============================#
 # Clean up unnecessary files #
 #============================#
-RUN rm -rf /tmp/* /var/tmp/*
+RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
+    rm -rf /tmp/* /var/tmp/*
 
 #===========================#
 # Default entrypoint script #
