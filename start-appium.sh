@@ -13,24 +13,11 @@ NC='\033[0m' # No Color
 APPIUM_PORT="${APPIUM_PORT:-4723}"  
 KEEP_ALIVE="${KEEP_ALIVE:-600}"
 HUB_ADDRESS="${HUB_ADDRESS:-}"
-HUB_NAME="${HUB_NAME:-}"
 
 #==============#
 # Start Appium #
 #==============#
 printf "${G}==> ${BL}Starting Appium on port ${YE}${APPIUM_PORT}${G} with keep-alive ${YE}${KEEP_ALIVE}${G} ms <==${NC}\n"
-
-#===============================#
-# Get the HUB_ADDRESS if HUB_NAME is set #
-#===============================#
-if [[ -n "${HUB_NAME}" ]]; then
-    HUB_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${HUB_NAME}")
-    if [[ -z "${HUB_ADDRESS}" ]]; then
-        printf "${RED}Error: Could not retrieve IP address for container ${HUB_NAME}.${NC}\n"
-        exit 1
-    fi
-    printf "${G}==> ${BL}Resolved HUB_NAME (${YE}${HUB_NAME}${BL}) to IP address ${YE}${HUB_ADDRESS}${NC}\n"
-fi
 
 #===============================#
 # Build the base Appium command #
@@ -57,3 +44,4 @@ if ! eval "${appium_command}"; then
     printf "${RED}Error: Failed to start Appium server.${NC}\n"
     exit 1
 fi
+
