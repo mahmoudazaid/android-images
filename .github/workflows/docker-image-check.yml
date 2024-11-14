@@ -1,4 +1,4 @@
-name: Docker Image Check
+name: Docker Image Health Check
 
 on:
   pull_request:
@@ -24,27 +24,51 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build Docker image for linux/amd64 and linux/arm64/v8
         run: |
-          docker build -t android-image:${{ github.sha }} .
+          echo "Building Docker image for linux/amd64 and linux/arm64/v8"
+          docker buildx build \
+            --platform linux/amd64,linux/arm64/v8 \
+            -t android-image:${{ github.sha }} \
+            --load .
 
-      - name: Check if the Docker image runs
+      - name: Check if the Docker image runs for linux/amd64
         run: |
-          docker run -d -e APPIUM=true --name test-android-image android-image:${{ github.sha }}
+          echo "Running container for linux/amd64"
+          docker run -d -e APPIUM=true --name test-android-image-amd64 --platform linux/amd64 android-image:${{ github.sha }}
 
           echo "Waiting for the container to start..."
           sleep 10  
 
-          if [[ $(docker ps -q -f name=test-android-image) ]]; then
-              echo "Container is up and running."
+          if [[ $(docker ps -q -f name=test-android-image-amd64) ]]; then
+              echo "Container for linux/amd64 is up and running."
           else
-              echo "Container failed to start."
+              echo "Container for linux/amd64 failed to start."
               exit 1
           fi
 
-          docker logs test-android-image
+          docker logs test-android-image-amd64
+
+      - name: Check if the Docker image runs for linux/arm64
+        run: |
+          echo "Running container for linux/arm64"
+          docker run -d -e APPIUM=true --name test-android-image-arm64 --platform linux/arm64/v8 android-image:${{ github.sha }}
+
+          echo "Waiting for the container to start..."
+          sleep 10  
+
+          if [[ $(docker ps -q -f name=test-android-image-arm64) ]]; then
+              echo "Container for linux/arm64 is up and running."
+          else
+              echo "Container for linux/arm64 failed to start."
+              exit 1
+          fi
+
+          docker logs test-android-image-arm64
 
       - name: Clean up
         run: |
-          docker stop test-android-image
-          docker rm test-android-image
+          docker stop test-android-image-amd64
+          docker rm test-android-image-amd64
+          docker stop test-android-image-arm64
+          docker rm test-android-image-arm64
