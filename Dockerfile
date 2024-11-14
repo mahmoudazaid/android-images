@@ -72,14 +72,14 @@ COPY ./start.sh /opt/
 #=============================#
 # Set Permissions for Scripts #
 #=============================#
-RUN chmod +x /opt/* /opt/appium/* /tmp/*
+RUN chmod +x /opt/*.sh /opt/appium/*.sh /tmp/*.sh
 
 #=============#
 # Run Scripts #
 #=============#
 RUN /tmp/install-node.sh --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
 RUN /tmp/install-appium.sh --APPIUM_VERSION=${APPIUM_VERSION} --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
-RUN /tmp/install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
+RUN /tmp/install-sdk-packages.sh --ANDROID_SDK_PACKAGES ${ANDROID_SDK_PACKAGES}
 
 #============================#
 # Clean up unnecessary files #
