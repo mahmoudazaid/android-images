@@ -71,7 +71,9 @@ COPY ./start.sh /opt/
 #=============================#
 # Set Permissions for Scripts #
 #=============================#
-RUN chmod a+x /opt/*.sh /opt/appium/*.sh /tmp/*.sh
+RUN chmod a+x /opt/*.sh && \
+    chmod a+x /opt/appium/* && \
+    chmod a+x /tmp/*
 
 #=============#
 # Run Scripts #
