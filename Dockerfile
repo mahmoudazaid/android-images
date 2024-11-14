@@ -64,16 +64,9 @@ RUN apt-get update && \
 #==============#
 # Copy scripts #
 #==============#
-COPY ./install-node.sh \
-    ./install-appium.sh \
-    ./install-sdk-packages.sh \
-     /tmp/
-
-COPY ./start-appium.sh \
-     /opt/appium/
-     
-COPY ./start.sh \
-     /opt/
+COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh /tmp/
+COPY ./start-appium.sh /opt/appium/
+COPY ./start.sh /opt/
 
 #=============================#
 # Set Permissions for Scripts #
@@ -83,16 +76,9 @@ RUN chmod +x /opt/* /opt/appium/* /tmp/*
 #=============#
 # Run Scripts #
 #=============#
-RUN /tmp/install-node.sh \
-    --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
-
-RUN /tmp/install-appium.sh \
-    --APPIUM_VERSION=${APPIUM_VERSION} \
-    --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} \
-    --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
-
-RUN /tmp/install-sdk-packages.sh \
-    --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
+RUN /tmp/install-node.sh --NODE_VERSION=${NODE_VERSION} --NPM_VERSION=${NPM_VERSION}
+RUN /tmp/install-appium.sh --APPIUM_VERSION=${APPIUM_VERSION} --UIAUTOMATOR_VERSION=${UIAUTOMATOR_VERSION} --DEVICE_FARM_VERSION=${DEVICE_FARM_VERSION}
+RUN /tmp/install-sdk-packages.sh --ANDROID_SDK_PACKAGES "$ANDROID_SDK_PACKAGES"
 
 #============================#
 # Clean up unnecessary files #
