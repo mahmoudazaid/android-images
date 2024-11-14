@@ -63,7 +63,7 @@ RUN apt-get update && \
 #==============#
 # Copy scripts #
 #==============#
-COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh . /
+COPY ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh /
 COPY ./start-appium.sh /opt/appium/
 COPY ./start.sh /opt/
 
