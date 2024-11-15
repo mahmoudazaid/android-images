@@ -56,10 +56,10 @@ jobs:
           echo "Error: ANDROID_VERSION is missing in the Dockerfile."
           exit 1
 
-      - name: Build and Push Multi-Platform Docker Images
+      - name: Build and Push Platform linux/amd64 Docker Image
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64/v8 \
+            --platform linux/amd64 \
             -t ${{ env.DOCKER_USERNAME }}/android:${{ env.VERSION }} \
             -t ${{ env.DOCKER_USERNAME }}/android:latest \
             --push .
