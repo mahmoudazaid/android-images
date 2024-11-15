@@ -22,8 +22,8 @@ ARG DEVICE_FARM_VERSION="9.2.3"
 #===================#
 # Node Version ARGs #
 #===================#
-ARG NODE_VERSION="22"S
-ARG NPM_VERSION="10.9.0"
+ARG NODE_VERSION=22
+ARG NPM_VERSION=10.9.0
 
 #================================#
 # Android SDK configurations     #
