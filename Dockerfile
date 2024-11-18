@@ -22,14 +22,15 @@ ARG DEVICE_FARM_VERSION="9.2.3"
 #===================#
 # Node Version ARGs #
 #===================#
-ARG NODE_VERSION="22"
-ARG NPM_VERSION="10.9.0"
+ARG NODE_VERSION=22
+ARG NPM_VERSION=10.9.0
 
 #================================#
 # Android SDK configurations     #
 #================================#
 LABEL ANDROID_VERSION=13
 ARG API_LEVEL="33"
+
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
 ARG ANDROID_API_LEVEL="android-${API_LEVEL}"
