@@ -13,11 +13,12 @@ NC='\033[0m' # No Color
 APPIUM_PORT="${APPIUM_PORT:-4723}"  
 KEEP_ALIVE="${KEEP_ALIVE:-600}"
 HUB_ADDRESS="${HUB_ADDRESS:-}"
+BASE_PATH="${BASE_PATH:-/}" # Default base path
 
 #==============#
 # Start Appium #
 #==============#
-printf "${G}==> ${BL}Starting Appium on port ${YE}${APPIUM_PORT}${G} with keep-alive ${YE}${KEEP_ALIVE}${G} ms <==${NC}\n"
+printf "${G}==> ${BL}Starting Appium on port ${YE}${APPIUM_PORT}${G} with keep-alive ${YE}${KEEP_ALIVE}${G} ms and base path ${YE}${BASE_PATH}${G} <==${NC}\n"
 
 #===============================#
 # Build the base Appium command #
@@ -27,7 +28,7 @@ appium_command="appium server \
     --use-plugins=device-farm \
     --plugin-device-farm-platform=android \
     --port ${APPIUM_PORT} \
-    --base-path /wd/hub"
+    --base-path ${BASE_PATH}"
 
 #=======================================================#
 # Add hub configuration only if HUB_ADDRESS is provided #
@@ -44,4 +45,3 @@ if ! eval "${appium_command}"; then
     printf "${RED}Error: Failed to start Appium server.${NC}\n"
     exit 1
 fi
-
