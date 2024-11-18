@@ -28,8 +28,8 @@ ARG NPM_VERSION=10.9.0
 #================================#
 # Android SDK configurations     #
 #================================#
-LABEL ANDROID_VERSION=12L
-ARG API_LEVEL="32"
+LABEL ANDROID_VERSION=13
+ARG API_LEVEL="33"
 
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
