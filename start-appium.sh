@@ -10,10 +10,11 @@ NC='\033[0m' # No Color
 #======================#
 # Appium Configuration #
 #======================#
-APPIUM_PORT="${APPIUM_PORT:-4723}"  
+APPIUM_PORT="${APPIUM_PORT:-4723}"
 KEEP_ALIVE="${KEEP_ALIVE:-600}"
 HUB_ADDRESS="${HUB_ADDRESS:-}"
-BASE_PATH="${BASE_PATH:-/}" # Default base path
+HUB_PORT="${HUB_PORT:-4723}"  
+BASE_PATH="${BASE_PATH:-/}"
 
 #==============#
 # Start Appium #
@@ -34,8 +35,8 @@ appium_command="appium server \
 # Add hub configuration only if HUB_ADDRESS is provided #
 #=======================================================#
 if [[ -n "${HUB_ADDRESS}" ]]; then
-    printf "${G}==> ${BL}Configuring hub address to ${YE}${HUB_ADDRESS}${NC}\n"
-    appium_command+=" --plugin-device-farm-hub=http://${HUB_ADDRESS}:${APPIUM_PORT}"
+    printf "${G}==> ${BL}Configuring hub address to ${YE}${HUB_ADDRESS}":${HUB_PORT}${NC}\n"
+    appium_command+=" --plugin-device-farm-hub=http://${HUB_ADDRESS}:${HUB_PORT}"
 fi
 
 #============================#
