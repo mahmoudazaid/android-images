@@ -1,20 +1,21 @@
 #!/bin/bash
 
 # Define colors for output
-BL='\033[0;34m'
-G='\033[0;32m'
-RED='\033[0;31m'
-YE='\033[1;33m'
-NC='\033[0m' # No Color
+BL='\033[0;34m'    # Blue
+G='\033[0;32m'     # Green
+RED='\033[0;31m'   # Red
+YE='\033[1;33m'    # Yellow
+NC='\033[0m'       # No Color
 
 #======================#
 # Appium Configuration #
 #======================#
-APPIUM_PORT="${APPIUM_PORT:-4723}"
-KEEP_ALIVE="${KEEP_ALIVE:-600}"
-HUB_IP="${HUB_IP:-}"
-HUB_PORT="${HUB_PORT:-4723}"  
-BASE_PATH="${BASE_PATH:-/}"
+# Default configuration values
+APPIUM_PORT="${APPIUM_PORT:-4723}"           # Default Appium port
+KEEP_ALIVE="${KEEP_ALIVE:-600}"              # Default keep-alive in ms
+HUB_IP="${HUB_IP:-}"                         # Optional hub IP
+HUB_PORT="${HUB_PORT:-4723}"                 # Default Hub port
+BASE_PATH="${BASE_PATH:-/}"                  # Default base path
 
 #==============#
 # Start Appium #
@@ -35,7 +36,7 @@ appium_command="appium server \
 # Add hub configuration only if HUB_IP is provided #
 #=======================================================#
 if [[ -n "${HUB_IP}" ]]; then
-    printf "${G}==> ${BL}Configuring hub address to ${YE}${HUB_IP}":${HUB_PORT}${NC}\n"
+    printf "${G}==> ${BL}Configuring hub address to ${YE}${HUB_IP}:${HUB_PORT}${NC}\n"
     appium_command+=" --plugin-device-farm-hub=http://${HUB_IP}:${HUB_PORT}"
 fi
 
