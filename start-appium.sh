@@ -36,7 +36,7 @@ appium_command="appium server \
 #=======================================================#
 if [[ -n "${HUB_IP}" ]]; then
     printf "${G}==> ${BL}Configuring hub address to ${YE}${HUB_IP}":${HUB_PORT}${NC}\n"
-    appium_command+=" --plugin-device-farm-hub=http://${HUB_IP}:${HUB_PORT}"
+    appium_command+=" --plugin-device-farm-hub="http://${HUB_IP}:${HUB_PORT}"
 fi
 
 #============================#
