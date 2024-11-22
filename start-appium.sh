@@ -11,12 +11,12 @@ NC='\033[0m'       # No Color
 # Appium Configuration #
 #======================#
 # Default configuration values
-APPIUM_PORT="${APPIUM_PORT:-4723}"           # Default Appium port
+APPIUM_PORT="${APPIUM_PORT:-4723}"          # Default Appium port
 KEEP_ALIVE="${KEEP_ALIVE:-600}"             # Default keep-alive in ms
 HUB_ADDRESS="${HUB_ADDRESS:-}"              # Optional hub IP
 HUB_PORT="${HUB_PORT:-4723}"                # Default Hub port
 BASE_PATH="${BASE_PATH:-}"                  # Default base path
-PLATFORM="${PLATFORM:-both}"                # Default platform
+PLATFORM="${PLATFORM:-android}"             # Default platform
 
 #==============#
 # Start Appium #
@@ -26,13 +26,7 @@ printf "${G}==> ${BL}Starting Appium on port ${YE}${APPIUM_PORT}${G} with keep-a
 #===============================#
 # Build the base Appium command #
 #===============================#
-appium_command="appium server --use-plugins=device-farm"
-
-#===================================#
-# Add Platform Configuration        #
-#===================================#
-printf "${G}==> ${BL}Configuring platform to ${YE}${PLATFORM}${NC}\n"
-appium_command+=" --plugin-device-farm-platform=${PLATFORM}"
+appium_command="appium server --use-plugins=device-farm --plugin-device-farm-platform=android"
 
 #===================================#
 # Add Keep Alive Configuration      #
