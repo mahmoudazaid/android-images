@@ -60,7 +60,7 @@ RUN apt-get update && \
     procps \
     usbmuxd \
     libimobiledevice-utils \
-    libusbmuxd-tools \
+    # libusbmuxd-tools \
     python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     pip3 install --upgrade pip && \
