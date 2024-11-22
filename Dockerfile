@@ -64,7 +64,8 @@ RUN apt-get update && \
     python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     pip3 install --upgrade pip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 #==============#
 # Copy scripts #
