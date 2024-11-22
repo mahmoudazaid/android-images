@@ -42,7 +42,7 @@ jobs:
 
         # Check Appium server status
         echo "Checking Appium server status"
-        if ! docker exec test-android-image-amd64 curl --fail http://localhost:4723/wd/hub/status; then
+        if ! docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
           echo "Appium server did not start successfully."
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
