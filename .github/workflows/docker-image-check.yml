@@ -44,7 +44,7 @@ jobs:
         retries=5
         for i in $(seq 1 $retries); do
           echo "Attempt $i of $retries"
-          if docker exec test-android-image-amd64 curl --fail http://localhost:4723/wd/hub/status; then
+          if docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
             echo "Appium server is running."
             break
           fi
