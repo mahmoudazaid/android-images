@@ -3,7 +3,7 @@ name: Docker Image Health Check
 on:
   pull_request:
     branches:
-      - master 
+      - master
 
 jobs:
   docker-build-run:
@@ -38,22 +38,33 @@ jobs:
       run: |
         echo "Testing Docker image on linux/amd64"
         docker run --platform linux/amd64 -d --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
-        sleep 10
+        sleep 15  # Wait a bit longer to ensure Appium and emulator have time to start.
 
-        # Check Appium server status
-        echo "Checking Appium server status"
-        if ! docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
-          echo "Appium server did not start successfully."
+        # Check Appium server status with retries
+        retries=5
+        for i in $(seq 1 $retries); do
+          echo "Attempt $i of $retries"
+          if docker exec test-android-image-amd64 curl --fail http://localhost:4723/wd/hub/status; then
+            echo "Appium server is running."
+            break
+          fi
+          echo "Appium server not started yet, retrying in 5 seconds..."
+          sleep 5
+        done
+
+        if [ $i -eq $retries ]; then
+          echo "Appium server did not start successfully after $retries attempts."
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
           docker rm test-android-image-amd64 || true
           exit 1
         fi
-        echo "Appium server is running."
 
         # Check if the emulator is running
-        echo "Checking if Android emulator is running"
-        if ! docker exec test-android-image-amd64 adb devices | grep -q "emulator"; then
+        echo "Checking Android emulator status..."
+        devices=$(docker exec test-android-image-amd64 adb devices)
+        echo "Devices found: $devices"
+        if ! echo "$devices" | grep -q "emulator"; then
           echo "Error: No Android emulator is running."
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
