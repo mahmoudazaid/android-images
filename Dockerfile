@@ -59,7 +59,7 @@ RUN apt-get update && \
     xvfb \
     procps \
     usbmuxd \
-    libimobiledevice-utils \
+    # libimobiledevice-utils \
     # libusbmuxd-tools \
     python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
