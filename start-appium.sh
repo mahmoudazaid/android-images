@@ -15,7 +15,7 @@ APPIUM_PORT="${APPIUM_PORT:-4723}"           # Default Appium port
 KEEP_ALIVE="${KEEP_ALIVE:-600}"              # Default keep-alive in ms
 HUB_IP="${HUB_IP:-}"                         # Optional hub IP
 HUB_PORT="${HUB_PORT:-4723}"                 # Default Hub port
-BASE_PATH="${BASE_PATH:-/}"                  # Default base path
+BASE_PATH="${BASE_PATH:-}"                  # Default base path
 
 #==============#
 # Start Appium #
