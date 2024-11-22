@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #===============================#
 # Set Appium not run by default #
 #===============================#
-ENV APPIUM=false
+ENV APPIUM=true
 
 #=====================#
 # APPIUM Version ARGs #
