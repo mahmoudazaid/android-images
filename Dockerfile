@@ -57,8 +57,13 @@ RUN apt-get update && \
     libnss3 \
     xauth \
     xvfb \
-    procps && \
+    procps \
+    usbmuxd \
+    libimobiledevice-utils \
+    libusbmuxd-tools \
+    python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
+    pip3 install --upgrade pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #==============#
@@ -85,6 +90,11 @@ RUN ./install-sdk-packages.sh --ANDROID_SDK_PACKAGES "${ANDROID_SDK_PACKAGES}"
 #============================#
 RUN rm -f ./install-node.sh ./install-appium.sh ./install-sdk-packages.sh && \
     rm -rf /tmp/* /var/tmp/*
+
+#=======================#
+# Ensure usbmuxd Socket #
+#=======================#
+RUN install -d -m 777 -o root -g root /var/run/usbmuxd
 
 #===========================#
 # Default entrypoint script #
