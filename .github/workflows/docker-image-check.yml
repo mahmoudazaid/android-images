@@ -40,20 +40,12 @@ jobs:
         docker run --platform linux/amd64 -d --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
         sleep 60  # Wait a bit longer to ensure Appium and emulator have time to start.
 
-        # Check Appium server status with retries
-        retries=5
-        for i in $(seq 1 $retries); do
-          echo "Attempt $i of $retries"
-          if docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
-            echo "Appium server is running."
-            break
-          fi
-          echo "Appium server not started yet, retrying in 5 seconds..."
-          sleep 5
-        done
-
-        if [ $i -eq $retries ]; then
-          echo "Appium server did not start successfully after $retries attempts."
+        # Check Appium server status
+        echo "Checking Appium server status"
+        if docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
+          echo "Appium server is running."
+        else
+          echo "Appium server did not start successfully."
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
           docker rm test-android-image-amd64 || true
