@@ -57,13 +57,9 @@ RUN apt-get update && \
     libnss3 \
     xauth \
     xvfb \
-    procps \
-    usbmuxd \
-    python3-pip && \
+    procps && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    pip3 install --upgrade pip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #==============#
 # Copy scripts #
