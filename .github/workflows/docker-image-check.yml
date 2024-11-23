@@ -38,6 +38,7 @@ jobs:
       run: |
         echo "Testing Docker image on linux/amd64"
         docker run --platform linux/amd64 -d --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
+        sleep 10
 
         # Check if Appium server started successfully
         echo "Checking Appium server status"
