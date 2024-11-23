@@ -37,20 +37,21 @@ jobs:
     - name: Test Docker Image on linux/amd64
       run: |
         echo "Testing Docker image on linux/amd64"
-        docker run --platform linux/amd64 -d --device /dev/kvm --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
+        docker run --platform linux/amd64 -d -p "4723:4723" --device /dev/kvm --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
         sleep 60  # Wait to ensure Appium and emulator have time to start.
 
         # Check if Appium server started successfully
         echo "Checking Appium server status"
-        status_code=$(docker exec test-android-image-amd64 curl -s -o /dev/null -w "%{http_code}" http://localhost:4723/status || echo "fail")
-        if [ "$status_code" != "200" ]; then
-          echo "Appium server did not start successfully. HTTP Status: $status_code"
+        status_output=$(docker exec test-android-image-amd64 curl -s http://localhost:4723/status || echo "fail")
+        if echo "$status_output" | grep -q '"ready":true'; then
+          echo "Appium server is running."
+        else
+          echo "Appium server did not start successfully. Response: $status_output"
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
           docker rm test-android-image-amd64 || true
           exit 1
         fi
-        echo "Appium server is running."
 
         # Check if the emulator is running
         echo "Checking Android emulator status..."
