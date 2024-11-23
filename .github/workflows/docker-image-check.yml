@@ -42,8 +42,9 @@ jobs:
 
         # Check if Appium server started successfully
         echo "Checking Appium server status"
-        if ! docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
-          echo "Appium server did not start successfully."
+        status_code=$(docker exec test-android-image-amd64 curl -s -o /dev/null -w "%{http_code}" http://localhost:4723/status || echo "fail")
+        if [ "$status_code" != "200" ]; then
+          echo "Appium server did not start successfully. HTTP Status: $status_code"
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
           docker rm test-android-image-amd64 || true
@@ -53,7 +54,7 @@ jobs:
 
         # Check if the emulator is running
         echo "Checking Android emulator status..."
-        devices=$(docker exec test-android-image-amd64 adb devices)
+        devices=$(docker exec test-android-image-amd64 adb devices || echo "fail")
         echo "Devices found: $devices"
         if ! echo "$devices" | grep -q "emulator"; then
           echo "Error: No Android emulator is running."
