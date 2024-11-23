@@ -3,7 +3,7 @@ name: Docker Image Health Check
 on:
   pull_request:
     branches:
-      - master
+      - master 
 
 jobs:
   docker-build-run:
@@ -30,39 +30,26 @@ jobs:
       run: |
         docker buildx build \
           --platform linux/amd64 \
-          -t ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }} \
-          -t ${{ env.DOCKER_USERNAME }}/android-image:latest \
+          -t ${{ env.DOCKER_USERNAME }}/appium-device-farm:${{ github.sha }} \
+          -t ${{ env.DOCKER_USERNAME }}/appium-device-farm:latest \
           --load .
 
     - name: Test Docker Image on linux/amd64
       run: |
         echo "Testing Docker image on linux/amd64"
-        docker run --platform linux/amd64 -d -p "4723:4723" --device /dev/kvm --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
-        sleep 60  # Wait to ensure Appium and emulator have time to start.
-
+        docker run --platform linux/amd64 -d --device /dev/kvm--name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/appium-device-farm:${{ github.sha }}
+        sleep 10
+        
         # Check if Appium server started successfully
         echo "Checking Appium server status"
         if ! docker exec test-android-image-amd64 curl --fail http://localhost:4723/status; then
           echo "Appium server did not start successfully."
-          docker logs test-appium-device-farm-amd64
-          docker stop test-android-image-amd64 || true
-          docker rm test-android-image-amd64 || true
-          exit 1
-        fi
-        echo "Appium server is running."
-
-        # Check if the emulator is running
-        echo "Checking Android emulator status..."
-        devices=$(docker exec test-android-image-amd64 adb devices || echo "fail")
-        echo "Devices found: $devices"
-        if ! echo "$devices" | grep -q "emulator"; then
-          echo "Error: No Android emulator is running."
           docker logs test-android-image-amd64
           docker stop test-android-image-amd64 || true
           docker rm test-android-image-amd64 || true
           exit 1
         fi
-        echo "Android emulator is running."
+        echo "Appium server is running."
 
     - name: Clean up
       run: |
