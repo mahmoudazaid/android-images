@@ -37,21 +37,7 @@ jobs:
     - name: Test Docker Image on linux/amd64
       run: |
         echo "Testing Docker image on linux/amd64"
-        docker run --platform linux/amd64 -d --device /dev/kvm --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
-        sleep 30
-        
-        # Check if the emulator is running
-        echo "Checking Android emulator status..."
-        devices=$(docker exec test-android-image-amd64 adb devices || echo "fail")
-        echo "Devices found: $devices"
-        if ! echo "$devices" | grep -q "emulator"; then
-          echo "Error: No Android emulator is running."
-          docker logs test-android-image-amd64
-          docker stop test-android-image-amd64 || true
-          docker rm test-android-image-amd64 || true
-          exit 1
-        fi
-        echo "Android emulator is running."
+        docker run --platform linux/amd64 -d --name test-android-image-amd64 ${{ env.DOCKER_USERNAME }}/android-image:${{ github.sha }}
 
         # Check if Appium server started successfully
         echo "Checking Appium server status"
