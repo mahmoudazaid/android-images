@@ -10,26 +10,26 @@ ENV DEBIAN_FRONTEND=noninteractive
 #===============================#
 # Set Appium not run by default #
 #===============================#
-ENV APPIUM=false
+ENV APPIUM=true
 
 #=====================#
 # APPIUM Version ARGs #
 #=====================#
-ARG APPIUM_VERSION="2.12.1"
-ARG UIAUTOMATOR_VERSION="3.8.0"
-ARG DEVICE_FARM_VERSION="9.2.3"
+ARG APPIUM_VERSION=2.12.1
+ARG UIAUTOMATOR_VERSION=3.8.0
+ARG DEVICE_FARM_VERSION=9.4.6
 
 #===================#
 # Node Version ARGs #
 #===================#
 ARG NODE_VERSION=22
-ARG NPM_VERSION=10.9.0
+ARG NPM_VERSION=10.9.1
 
 #================================#
 # Android SDK configurations     #
 #================================#
 LABEL ANDROID_VERSION=12
-ARG API_LEVEL="31"
+ARG API_LEVEL=31
 
 ARG ARCH="x86_64"
 ARG TARGET="google_apis_playstore"
@@ -51,6 +51,7 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y \
     tzdata \
     curl \
+    git \
     wget \
     unzip \
     bzip2 \
