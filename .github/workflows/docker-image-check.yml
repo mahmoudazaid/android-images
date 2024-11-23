@@ -51,6 +51,19 @@ jobs:
         fi
         echo "Appium server is running."
 
+        # Check if the emulator is running
+        echo "Checking Android emulator status..."
+        devices=$(docker exec test-android-image-amd64 adb devices || echo "fail")
+        echo "Devices found: $devices"
+        if ! echo "$devices" | grep -q "emulator"; then
+          echo "Error: No Android emulator is running."
+          docker logs test-android-image-amd64
+          docker stop test-android-image-amd64 || true
+          docker rm test-android-image-amd64 || true
+          exit 1
+        fi
+        echo "Android emulator is running."
+
     - name: Clean up
       run: |
         docker stop test-android-image-amd64 || true
