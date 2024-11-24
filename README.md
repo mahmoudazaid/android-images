@@ -14,7 +14,7 @@ You can use this image to build your own Docker container with emulators, run Ap
 ![npm Version](https://img.shields.io/badge/npm-10.9.0-blue)  
 ![Appium Version](https://img.shields.io/badge/appium-2.12.1-blue)
 ![UiAutomator Version](https://img.shields.io/badge/uiautomator2-3.8.0-blue)
-![Device-Farm Version](https://img.shields.io/badge/device_farm-9.2.3-blue)
+![Device-Farm Version](https://img.shields.io/badge/device_farm-9.4.6-blue)
 
 ## Table of Contents
 
